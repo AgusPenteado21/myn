@@ -3,9 +3,6 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Phone,
   MapPin,
@@ -15,7 +12,6 @@ import {
   Zap,
   Droplets,
   Building,
-  Mail,
   Clock,
   Award,
   Users,
@@ -26,6 +22,7 @@ import {
   X,
 } from "lucide-react"
 import { useEffect, useState } from "react"
+import { ContactForm } from "@/components/ui/contact-form"
 
 export default function LandingPage() {
   const [isVisible, setIsVisible] = useState(false)
@@ -137,34 +134,17 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden pt-16">
-        {/* Professional Background Elements */}
+        {/* Background Image */}
         <div className="absolute inset-0">
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-800/80 to-slate-900/80"></div>
-
-          {/* Grid Pattern */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
-
-          {/* Animated Gradient Blobs - Responsive sizes */}
-          <div className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 bg-gradient-to-r from-teal-400 to-blue-500 rounded-full filter blur-3xl opacity-10 animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full filter blur-3xl opacity-10 animate-pulse delay-1000"></div>
-
-          {/* Diagonal Lines */}
-          <div className="absolute inset-0 overflow-hidden opacity-10">
-            <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.05)_25%,rgba(255,255,255,0.05)_50%,transparent_50%,transparent_75%,rgba(255,255,255,0.05)_75%)] bg-[length:50px_50px] sm:bg-[length:100px_100px]"></div>
-          </div>
-        </div>
-
-        {/* Floating Elements - Responsive positioning */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-5 sm:left-10 w-2 h-2 bg-yellow-400 rounded-full animate-bounce delay-300"></div>
-          <div className="absolute top-40 right-10 sm:right-20 w-3 h-3 bg-white rounded-full animate-bounce delay-700"></div>
-          <div className="absolute bottom-40 left-10 sm:left-20 w-2 h-2 bg-yellow-400 rounded-full animate-bounce delay-1000"></div>
-
-          {/* Additional Professional Elements - Responsive sizes */}
-          <div className="absolute top-1/3 right-1/3 w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 border border-white/10 rounded-full"></div>
-          <div className="absolute bottom-1/3 left-1/3 w-24 h-24 sm:w-36 sm:h-36 lg:w-48 lg:h-48 border border-white/5 rounded-full"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 border border-white/5 rounded-full"></div>
+          <Image
+            src="/images/construccion.jpg"
+            alt="Construcción MYN"
+            fill
+            className="object-cover object-center"
+            priority
+          />
+          {/* Overlay para mejor legibilidad del texto */}
+          <div className="absolute inset-0 bg-black/50"></div>
         </div>
 
         <div className="container mx-auto text-center px-4 sm:px-6 relative z-10">
@@ -489,82 +469,7 @@ export default function LandingPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 pt-0">
-                <form className="space-y-4 sm:space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="nombre" className="text-white font-medium text-sm sm:text-base">
-                        Nombre
-                      </Label>
-                      <Input
-                        id="nombre"
-                        placeholder="Tu nombre"
-                        className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-yellow-400 focus:ring-yellow-400 transition-all duration-300 text-sm sm:text-base"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="apellido" className="text-white font-medium text-sm sm:text-base">
-                        Apellido
-                      </Label>
-                      <Input
-                        id="apellido"
-                        placeholder="Tu apellido"
-                        className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-yellow-400 focus:ring-yellow-400 transition-all duration-300 text-sm sm:text-base"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="telefono" className="text-white font-medium text-sm sm:text-base">
-                      Teléfono
-                    </Label>
-                    <Input
-                      id="telefono"
-                      placeholder="Tu número de teléfono"
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-yellow-400 focus:ring-yellow-400 transition-all duration-300 text-sm sm:text-base"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-white font-medium text-sm sm:text-base">
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="tu@email.com"
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-yellow-400 focus:ring-yellow-400 transition-all duration-300 text-sm sm:text-base"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="servicio" className="text-white font-medium text-sm sm:text-base">
-                      Servicio de Interés
-                    </Label>
-                    <select className="w-full p-2 sm:p-3 bg-white/10 border border-white/20 rounded-md text-white focus:border-yellow-400 focus:ring-yellow-400 transition-all duration-300 text-sm sm:text-base">
-                      <option className="bg-slate-800">Seleccionar servicio</option>
-                      <option className="bg-slate-800">Pintura en general</option>
-                      <option className="bg-slate-800">Durlock y cielorrasos</option>
-                      <option className="bg-slate-800">Electricidad</option>
-                      <option className="bg-slate-800">Plomería</option>
-                      <option className="bg-slate-800">Mantenimiento de edificios</option>
-                      <option className="bg-slate-800">Albañilería</option>
-                      <option className="bg-slate-800">Otro</option>
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="mensaje" className="text-white font-medium text-sm sm:text-base">
-                      Mensaje
-                    </Label>
-                    <Textarea
-                      id="mensaje"
-                      placeholder="Contanos sobre tu proyecto..."
-                      rows={4}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-yellow-400 focus:ring-yellow-400 transition-all duration-300 text-sm sm:text-base"
-                    />
-                  </div>
-                  <Button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold py-3 sm:py-4 rounded-full shadow-2xl hover:shadow-yellow-400/25 transition-all duration-300 transform hover:scale-105 group text-sm sm:text-base">
-                    <Mail className="mr-2 sm:mr-3 h-4 sm:h-5 w-4 sm:w-5 group-hover:animate-pulse" />
-                    Enviar Consulta
-                    <ArrowRight className="ml-2 sm:ml-3 h-4 sm:h-5 w-4 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </Button>
-                </form>
+                <ContactForm />
               </CardContent>
             </Card>
           </div>
