@@ -174,7 +174,7 @@ export default function LandingPage() {
               className="w-full sm:w-auto bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full shadow-2xl hover:shadow-yellow-400/25 transition-all duration-300 transform hover:scale-105 group"
               asChild
             >
-              <a href="tel:+5401137641442">
+              <a href="tel:+5401132641442">
                 <Phone className="mr-2 sm:mr-3 h-4 sm:h-5 w-4 sm:w-5 group-hover:animate-pulse" />
                 Llamar Ahora
                 <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5 group-hover:translate-x-1 transition-transform duration-300" />
@@ -424,7 +424,7 @@ export default function LandingPage() {
                   {
                     icon: Phone,
                     name: "Ignacio Sosa",
-                    contact: "011 3764-1442",
+                    contact: "011 3264-1442",
                     color: "from-green-500 to-emerald-600",
                   },
                   {
@@ -496,7 +496,7 @@ export default function LandingPage() {
             </div>
             <p className="text-gray-400 text-base sm:text-lg mb-4 sm:mb-6">Construcción y Renovación Profesional</p>
             <div className="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-8 lg:space-x-12 text-sm sm:text-base lg:text-lg">
-              <span className="hover:text-teal-400 transition-colors duration-300">Ignacio Sosa: 011 3764-1442</span>
+              <span className="hover:text-teal-400 transition-colors duration-300">Ignacio Sosa: 011 3264-1442</span>
               <span className="hover:text-teal-400 transition-colors duration-300">
                 Mario de la Cruz: 011 7206-6971
               </span>
