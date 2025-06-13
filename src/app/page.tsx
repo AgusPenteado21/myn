@@ -20,14 +20,72 @@ import {
   Star,
   Menu,
   X,
+  Camera,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { ContactForm } from "@/components/ui/contact-form"
+import { ServiceGalleryModal } from "@/components/ui/service-gallery-modal"
 
 export default function LandingPage() {
   const [isVisible, setIsVisible] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [selectedService, setSelectedService] = useState<{
+    name: string
+    images: string[]
+  } | null>(null)
+
+  // Datos de servicios con imágenes
+  const servicesData = [
+    {
+      icon: Paintbrush,
+      title: "Pintura en General",
+      description: "Pintura interior y exterior con materiales de primera calidad",
+      features: ["Trabajo en altura", "Revestimientos", "Acabados profesionales"],
+      color: "from-red-500 to-pink-600",
+      images: ["/images/pintura-1.png", "/images/pintura-2.png", "/images/pintura-3.png"],
+    },
+    {
+      icon: Home,
+      title: "Construcción Seca",
+      description: "Durlock, cielorrasos y refacciones en general",
+      features: ["Instalación de Durlock", "Cielorrasos", "Colocación de cerámica"],
+      color: "from-blue-500 to-cyan-600",
+      images: ["/images/durlock-1.jpg", "/images/durlock-2.jpg", "/images/durlock-3.jpg"],
+    },
+    {
+      icon: Zap,
+      title: "Electricidad",
+      description: "Instalaciones eléctricas seguras y certificadas",
+      features: ["Instalaciones nuevas", "Reparaciones", "Mantenimiento"],
+      color: "from-yellow-500 to-orange-600",
+      images: ["/images/electricidad-1.jpg", "/images/electricidad-2.jpg", "/images/electricidad-3.jpg"],
+    },
+    {
+      icon: Droplets,
+      title: "Plomería",
+      description: "Desagües, plomería y mantenimiento de cañerías",
+      features: ["Reparación de desagües", "Instalaciones sanitarias", "Mantenimiento preventivo"],
+      color: "from-blue-600 to-indigo-700",
+      images: ["/images/plomeria-1.jpg", "/images/plomeria-2.jpg", "/images/plomeria-3.jpg"],
+    },
+    {
+      icon: Building,
+      title: "Mantenimiento de Edificios",
+      description: "Mantenimiento integral para edificios, quintas y casas",
+      features: ["Mantenimiento preventivo", "Reparaciones generales", "Limpieza de fachadas"],
+      color: "from-green-500 to-emerald-600",
+      images: ["/images/mantenimiento-1.jpeg", "/images/mantenimiento-2.jpeg", "/images/mantenimiento-3.jpeg"],
+    },
+    {
+      icon: Wrench,
+      title: "Albañilería",
+      description: "Trabajos de albañilería y refacciones generales",
+      features: ["Refacciones en general", "Reparaciones estructurales", "Trabajos de mampostería"],
+      color: "from-purple-500 to-violet-600",
+      images: ["/images/albanileria-1.jpg", "/images/albanileria-2.jpg", "/images/albanileria-3.jpg"],
+    },
+  ]
 
   useEffect(() => {
     setIsVisible(true)
@@ -37,6 +95,14 @@ export default function LandingPage() {
   }, [])
 
   const closeMobileMenu = () => setMobileMenuOpen(false)
+
+  const openServiceGallery = (serviceName: string, images: string[]) => {
+    setSelectedService({ name: serviceName, images })
+  }
+
+  const closeServiceGallery = () => {
+    setSelectedService(null)
+  }
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
@@ -246,53 +312,10 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {[
-              {
-                icon: Paintbrush,
-                title: "Pintura en General",
-                description: "Pintura interior y exterior con materiales de primera calidad",
-                features: ["Trabajo en altura", "Revestimientos", "Acabados profesionales"],
-                color: "from-red-500 to-pink-600",
-              },
-              {
-                icon: Home,
-                title: "Construcción Seca",
-                description: "Durlock, cielorrasos y refacciones en general",
-                features: ["Instalación de Durlock", "Cielorrasos", "Colocación de cerámica"],
-                color: "from-blue-500 to-cyan-600",
-              },
-              {
-                icon: Zap,
-                title: "Electricidad",
-                description: "Instalaciones eléctricas seguras y certificadas",
-                features: ["Instalaciones nuevas", "Reparaciones", "Mantenimiento"],
-                color: "from-yellow-500 to-orange-600",
-              },
-              {
-                icon: Droplets,
-                title: "Plomería",
-                description: "Desagües, plomería y mantenimiento de cañerías",
-                features: ["Reparación de desagües", "Instalaciones sanitarias", "Mantenimiento preventivo"],
-                color: "from-blue-600 to-indigo-700",
-              },
-              {
-                icon: Building,
-                title: "Mantenimiento de Edificios",
-                description: "Mantenimiento integral para edificios, quintas y casas",
-                features: ["Mantenimiento preventivo", "Reparaciones generales", "Limpieza de fachadas"],
-                color: "from-green-500 to-emerald-600",
-              },
-              {
-                icon: Wrench,
-                title: "Albañilería",
-                description: "Trabajos de albañilería y refacciones generales",
-                features: ["Refacciones en general", "Reparaciones estructurales", "Trabajos de mampostería"],
-                color: "from-purple-500 to-violet-600",
-              },
-            ].map((service, index) => (
+            {servicesData.map((service, index) => (
               <Card
                 key={index}
-                className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 group"
+                className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 group relative"
               >
                 <CardHeader className="text-center p-4 sm:p-6">
                   <div
@@ -308,7 +331,7 @@ export default function LandingPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-4 sm:p-6 pt-0">
-                  <ul className="space-y-2 sm:space-y-3">
+                  <ul className="space-y-2 sm:space-y-3 mb-4">
                     {service.features.map((feature, idx) => (
                       <li
                         key={idx}
@@ -319,6 +342,17 @@ export default function LandingPage() {
                       </li>
                     ))}
                   </ul>
+
+                  {/* Botón para ver fotos */}
+                  <Button
+                    onClick={() => openServiceGallery(service.title, service.images)}
+                    className="w-full bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-400 border border-yellow-400/30 hover:border-yellow-400/50 transition-all duration-300"
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Camera className="h-4 w-4 mr-2" />
+                    Ver
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -509,6 +543,16 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Service Gallery Modal */}
+      {selectedService && (
+        <ServiceGalleryModal
+          isOpen={!!selectedService}
+          onClose={closeServiceGallery}
+          serviceName={selectedService.name}
+          images={selectedService.images}
+        />
+      )}
     </div>
   )
 }
