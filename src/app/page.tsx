@@ -20,20 +20,14 @@ import {
   Star,
   Menu,
   X,
-  Camera,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { ContactForm } from "@/components/ui/contact-form"
-import { ServiceGalleryModal } from "@/components/ui/service-gallery-modal"
 
 export default function LandingPage() {
   const [isVisible, setIsVisible] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [selectedService, setSelectedService] = useState<{
-    name: string
-    images: string[]
-  } | null>(null)
 
   // Datos de servicios con imágenes
   const servicesData = [
@@ -95,14 +89,6 @@ export default function LandingPage() {
   }, [])
 
   const closeMobileMenu = () => setMobileMenuOpen(false)
-
-  const openServiceGallery = (serviceName: string, images: string[]) => {
-    setSelectedService({ name: serviceName, images })
-  }
-
-  const closeServiceGallery = () => {
-    setSelectedService(null)
-  }
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
@@ -311,50 +297,97 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="space-y-16 sm:space-y-20">
             {servicesData.map((service, index) => (
-              <Card
+              <div
                 key={index}
-                className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 group relative"
+                className={`grid lg:grid-cols-2 gap-8 sm:gap-12 items-center ${index % 2 === 1 ? "lg:grid-flow-col-dense" : ""
+                  }`}
               >
-                <CardHeader className="text-center p-4 sm:p-6">
-                  <div
-                    className={`mx-auto mb-3 sm:mb-4 p-3 sm:p-4 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg group-hover:shadow-2xl transition-all duration-300 transform group-hover:scale-110 group-hover:rotate-3`}
-                  >
-                    <service.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                {/* Content */}
+                <div className={`space-y-6 ${index % 2 === 1 ? "lg:col-start-2" : ""}`}>
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className={`p-4 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg`}>
+                      <service.icon className="h-8 w-8 text-white" />
+                    </div>
+                    <h4 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">{service.title}</h4>
                   </div>
-                  <CardTitle className="text-lg sm:text-xl font-bold text-white group-hover:text-yellow-400 transition-colors duration-300">
-                    {service.title}
-                  </CardTitle>
-                  <CardDescription className="text-sm sm:text-base text-gray-300">
-                    {service.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-4 sm:p-6 pt-0">
-                  <ul className="space-y-2 sm:space-y-3 mb-4">
+
+                  <p className="text-lg sm:text-xl text-gray-300 leading-relaxed">{service.description}</p>
+
+                  <ul className="space-y-3">
                     {service.features.map((feature, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center text-xs sm:text-sm text-gray-300 group-hover:text-white transition-colors duration-300"
-                      >
-                        <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 mr-2 sm:mr-3 flex-shrink-0" />
+                      <li key={idx} className="flex items-center text-base sm:text-lg text-gray-300">
+                        <CheckCircle className="h-5 w-5 text-yellow-400 mr-3 flex-shrink-0" />
                         {feature}
                       </li>
                     ))}
                   </ul>
+                </div>
 
-                  {/* Botón para ver fotos */}
-                  <Button
-                    onClick={() => openServiceGallery(service.title, service.images)}
-                    className="w-full bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-400 border border-yellow-400/30 hover:border-yellow-400/50 transition-all duration-300"
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Camera className="h-4 w-4 mr-2" />
-                    Ver
-                  </Button>
-                </CardContent>
-              </Card>
+                {/* Large Image Gallery - Optimized */}
+                <div className={`${index % 2 === 1 ? "lg:col-start-1" : ""}`}>
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Main large image */}
+                    <div className="col-span-2 relative group overflow-hidden rounded-2xl shadow-2xl">
+                      <Image
+                        src={
+                          service.images && service.images[0]
+                            ? service.images[0]
+                            : "/placeholder.svg?height=400&width=600"
+                        }
+                        alt={`${service.title} - Imagen principal`}
+                        width={600}
+                        height={400}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        className="w-full h-64 sm:h-80 lg:h-96 object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="font-semibold text-lg">{service.title}</p>
+                        <p className="text-sm text-gray-200">Trabajo profesional</p>
+                      </div>
+                    </div>
+
+                    {/* Two smaller images */}
+                    <div className="relative group overflow-hidden rounded-xl shadow-lg">
+                      <Image
+                        src={
+                          service.images && service.images[1]
+                            ? service.images[1]
+                            : "/placeholder.svg?height=200&width=300"
+                        }
+                        alt={`${service.title} - Imagen 2`}
+                        width={300}
+                        height={200}
+                        loading="lazy"
+                        className="w-full h-32 sm:h-40 lg:h-48 object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300"></div>
+                    </div>
+
+                    <div className="relative group overflow-hidden rounded-xl shadow-lg">
+                      <Image
+                        src={
+                          service.images && service.images[2]
+                            ? service.images[2]
+                            : "/placeholder.svg?height=200&width=300"
+                        }
+                        alt={`${service.title} - Imagen 3`}
+                        width={300}
+                        height={200}
+                        loading="lazy"
+                        className="w-full h-32 sm:h-40 lg:h-48 object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300"></div>
+                    </div>
+                  </div>
+
+                  {/* Decorative elements */}
+                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-yellow-400/20 to-transparent rounded-full blur-xl"></div>
+                  <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-transparent rounded-full blur-xl"></div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -543,16 +576,6 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
-
-      {/* Service Gallery Modal */}
-      {selectedService && (
-        <ServiceGalleryModal
-          isOpen={!!selectedService}
-          onClose={closeServiceGallery}
-          serviceName={selectedService.name}
-          images={selectedService.images}
-        />
-      )}
     </div>
   )
 }
