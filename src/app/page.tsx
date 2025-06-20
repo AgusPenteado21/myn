@@ -21,85 +21,128 @@ import {
   Menu,
   X,
 } from "lucide-react"
-import { useState, useCallback, memo } from "react"
+import { useState, useCallback, memo, Suspense } from "react"
 import { ContactForm } from "@/components/ui/contact-form"
 
-// Memoized service card component for better performance
-const ServiceCard = memo(({ service, index }: { service: any; index: number }) => (
-  <div
-    className={`grid lg:grid-cols-2 gap-8 sm:gap-12 items-center ${index % 2 === 1 ? "lg:grid-flow-col-dense" : ""}`}
-  >
-    {/* Content */}
-    <div className={`space-y-6 ${index % 2 === 1 ? "lg:col-start-2" : ""}`}>
-      <div className="flex items-center space-x-4 mb-6">
-        <div className={`p-4 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg`}>
-          <service.icon className="h-8 w-8 text-white" />
+// Skeleton loader component
+const ImageSkeleton = ({ className }: { className: string }) => (
+  <div className={`${className} bg-gray-300 animate-pulse rounded-xl`} />
+)
+
+// Optimized image component with progressive loading
+const OptimizedImage = memo(
+  ({
+    src,
+    alt,
+    width,
+    height,
+    className,
+    priority = false,
+    quality = 50,
+  }: {
+    src: string
+    alt: string
+    width: number
+    height: number
+    className: string
+    priority?: boolean
+    quality?: number
+  }) => (
+    <Suspense fallback={<ImageSkeleton className={className} />}>
+      <Image
+        src={src || "/placeholder.svg"}
+        alt={alt}
+        width={width}
+        height={height}
+        loading={priority ? "eager" : "lazy"}
+        className={className}
+        quality={quality}
+        placeholder="blur"
+        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      />
+    </Suspense>
+  ),
+)
+
+OptimizedImage.displayName = "OptimizedImage"
+
+// Ultra-optimized service card component
+const ServiceCard = memo(({ service, index }: { service: any; index: number }) => {
+  const isVisible = index < 2 // Only load first 2 services immediately
+
+  return (
+    <div
+      className={`grid lg:grid-cols-2 gap-8 sm:gap-12 items-center ${index % 2 === 1 ? "lg:grid-flow-col-dense" : ""}`}
+    >
+      {/* Content */}
+      <div className={`space-y-6 ${index % 2 === 1 ? "lg:col-start-2" : ""}`}>
+        <div className="flex items-center space-x-4 mb-6">
+          <div className={`p-4 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg`}>
+            <service.icon className="h-8 w-8 text-white" />
+          </div>
+          <h4 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">{service.title}</h4>
         </div>
-        <h4 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">{service.title}</h4>
+
+        <p className="text-lg sm:text-xl text-gray-300 leading-relaxed">{service.description}</p>
+
+        <ul className="space-y-3">
+          {service.features.map((feature: string, idx: number) => (
+            <li key={idx} className="flex items-center text-base sm:text-lg text-gray-300">
+              <CheckCircle className="h-5 w-5 text-yellow-400 mr-3 flex-shrink-0" />
+              {feature}
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <p className="text-lg sm:text-xl text-gray-300 leading-relaxed">{service.description}</p>
+      {/* Ultra-optimized Image Gallery */}
+      <div className={`${index % 2 === 1 ? "lg:col-start-1" : ""}`}>
+        <div className="grid grid-cols-2 gap-4">
+          {/* Main large image - Ultra compressed */}
+          <div className="col-span-2 relative overflow-hidden rounded-2xl shadow-2xl">
+            <OptimizedImage
+              src={service.images?.[0] || "/placeholder.svg?height=400&width=600"}
+              alt={`${service.title} - Imagen principal`}
+              width={600}
+              height={400}
+              className="w-full h-64 sm:h-80 lg:h-96 object-cover"
+              priority={isVisible}
+              quality={40} // Muy comprimido para velocidad
+            />
+            <div className="absolute bottom-4 left-4 right-4 text-white">
+              <p className="font-semibold text-lg">{service.title}</p>
+              <p className="text-sm text-gray-200">Trabajo profesional</p>
+            </div>
+          </div>
 
-      <ul className="space-y-3">
-        {service.features.map((feature: string, idx: number) => (
-          <li key={idx} className="flex items-center text-base sm:text-lg text-gray-300">
-            <CheckCircle className="h-5 w-5 text-yellow-400 mr-3 flex-shrink-0" />
-            {feature}
-          </li>
-        ))}
-      </ul>
-    </div>
+          {/* Two smaller images - Even more compressed */}
+          <div className="relative overflow-hidden rounded-xl shadow-lg">
+            <OptimizedImage
+              src={service.images?.[1] || "/placeholder.svg?height=200&width=300"}
+              alt={`${service.title} - Imagen 2`}
+              width={300}
+              height={200}
+              className="w-full h-32 sm:h-40 lg:h-48 object-cover"
+              quality={30} // Máxima compresión
+            />
+          </div>
 
-    {/* Optimized Image Gallery */}
-    <div className={`${index % 2 === 1 ? "lg:col-start-1" : ""}`}>
-      <div className="grid grid-cols-2 gap-4">
-        {/* Main large image */}
-        <div className="col-span-2 relative overflow-hidden rounded-2xl shadow-2xl">
-          <Image
-            src={service.images?.[0] || "/placeholder.svg?height=400&width=600"}
-            alt={`${service.title} - Imagen principal`}
-            width={600}
-            height={400}
-            loading={index < 2 ? "eager" : "lazy"}
-            className="w-full h-64 sm:h-80 lg:h-96 object-cover"
-            quality={75}
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-          />
-          <div className="absolute bottom-4 left-4 right-4 text-white">
-            <p className="font-semibold text-lg">{service.title}</p>
-            <p className="text-sm text-gray-200">Trabajo profesional</p>
+          <div className="relative overflow-hidden rounded-xl shadow-lg">
+            <OptimizedImage
+              src={service.images?.[2] || "/placeholder.svg?height=200&width=300"}
+              alt={`${service.title} - Imagen 3`}
+              width={300}
+              height={200}
+              className="w-full h-32 sm:h-40 lg:h-48 object-cover"
+              quality={30} // Máxima compresión
+            />
           </div>
         </div>
-
-        {/* Two smaller images */}
-        <div className="relative overflow-hidden rounded-xl shadow-lg">
-          <Image
-            src={service.images?.[1] || "/placeholder.svg?height=200&width=300"}
-            alt={`${service.title} - Imagen 2`}
-            width={300}
-            height={200}
-            loading="lazy"
-            className="w-full h-32 sm:h-40 lg:h-48 object-cover"
-            quality={60}
-          />
-        </div>
-
-        <div className="relative overflow-hidden rounded-xl shadow-lg">
-          <Image
-            src={service.images?.[2] || "/placeholder.svg?height=200&width=300"}
-            alt={`${service.title} - Imagen 3`}
-            width={300}
-            height={200}
-            loading="lazy"
-            className="w-full h-32 sm:h-40 lg:h-48 object-cover"
-            quality={60}
-          />
-        </div>
       </div>
     </div>
-  </div>
-))
+  )
+})
 
 ServiceCard.displayName = "ServiceCard"
 
@@ -162,18 +205,19 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header - Simplified */}
-      <header className="fixed top-0 w-full bg-white/90 backdrop-blur-sm py-3 px-4 sm:px-6 z-50 border-b border-gray-200 shadow-sm">
+      {/* Header - Ultra simplified */}
+      <header className="fixed top-0 w-full bg-white/95 py-3 px-4 sm:px-6 z-50 border-b border-gray-200 shadow-sm">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden shadow-md">
-              <Image
+              <OptimizedImage
                 src="/images/logo.png"
                 alt="MYN Logo"
                 width={48}
                 height={48}
                 className="w-full h-full object-cover"
-                priority
+                priority={true}
+                quality={60}
               />
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-slate-800">MYN</h1>
@@ -237,13 +281,14 @@ export default function LandingPage() {
       {/* Hero Section - Optimized */}
       <section className="relative min-h-screen flex items-center justify-center bg-slate-900 text-white pt-16">
         <div className="absolute inset-0">
-          <Image
+          <OptimizedImage
             src="/images/construccion.jpg"
             alt="Construcción MYN"
-            fill
-            className="object-cover"
-            priority
-            quality={85}
+            width={1920}
+            height={1080}
+            className="w-full h-full object-cover"
+            priority={true}
+            quality={60}
           />
           <div className="absolute inset-0 bg-black/50"></div>
         </div>
@@ -302,7 +347,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Services Section - Optimized */}
+      {/* Services Section - Progressive Loading */}
       <section id="servicios" className="py-20 px-4 sm:px-6 bg-slate-900 text-white">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -322,32 +367,23 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* About Section - Restored Original Design */}
+      {/* About Section - Optimized */}
       <section id="nosotros" className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 relative overflow-hidden">
-        {/* Imagen de fondo integrada con máscara radial */}
         <div className="absolute inset-0 opacity-25">
-          <Image
+          <OptimizedImage
             src="/images/imagen1.png"
             alt="MYN Background"
-            fill
-            className="object-cover object-center"
-            loading="lazy"
-            style={{
-              maskImage: "radial-gradient(ellipse 80% 60% at 70% 50%, black 40%, transparent 70%)",
-              WebkitMaskImage: "radial-gradient(ellipse 80% 60% at 70% 50%, black 40%, transparent 70%)",
-            }}
+            width={1200}
+            height={800}
+            className="w-full h-full object-cover object-center"
+            quality={40}
           />
         </div>
 
-        {/* Overlay gradiente para mejor legibilidad */}
         <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-white/60"></div>
-
-        {/* Patrón sutil superpuesto */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
 
         <div className="container mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
-            {/* Contenido principal */}
             <div className="space-y-6 sm:space-y-8">
               <div>
                 <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
@@ -359,7 +395,6 @@ export default function LandingPage() {
                 </p>
               </div>
 
-              {/* Lista de características */}
               <div className="space-y-4 sm:space-y-6">
                 {[
                   { icon: Award, text: "Profesionales certificados y con experiencia" },
@@ -367,24 +402,17 @@ export default function LandingPage() {
                   { icon: Clock, text: "Presupuestos sin compromiso" },
                   { icon: Users, text: "Garantía en todos nuestros trabajos" },
                 ].map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center group hover:bg-white/80 hover:shadow-lg rounded-xl p-3 sm:p-4 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
-                  >
-                    <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full p-2 sm:p-3 mr-3 sm:mr-4 shadow-lg group-hover:shadow-yellow-400/25 transition-all duration-300 transform group-hover:scale-110">
+                  <div key={index} className="flex items-center p-3 sm:p-4 bg-white/80 rounded-xl shadow-lg">
+                    <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full p-2 sm:p-3 mr-3 sm:mr-4 shadow-lg">
                       <item.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
-                    <span className="text-base sm:text-lg font-medium text-gray-700 group-hover:text-slate-800 transition-colors duration-300">
-                      {item.text}
-                    </span>
+                    <span className="text-base sm:text-lg font-medium text-gray-700">{item.text}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Espacio para que la imagen de fondo se vea mejor */}
             <div className="hidden lg:block relative">
-              {/* Elementos decorativos sutiles */}
               <div className="absolute top-10 right-10 w-32 h-32 border border-gray-200/50 rounded-full"></div>
               <div className="absolute bottom-10 left-10 w-24 h-24 border border-gray-200/30 rounded-full"></div>
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-gray-200/20 rounded-full"></div>
@@ -393,7 +421,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Contact Section - Simplified */}
+      {/* Contact Section */}
       <section id="contacto" className="py-20 px-4 sm:px-6 bg-slate-900 text-white">
         <div className="container mx-auto">
           <div className="text-center mb-16">
@@ -447,18 +475,19 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer - Simplified */}
+      {/* Footer */}
       <footer className="bg-slate-950 text-white py-12 px-4 sm:px-6">
         <div className="container mx-auto">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-4 mb-6">
               <div className="w-16 h-16 rounded-2xl overflow-hidden">
-                <Image
+                <OptimizedImage
                   src="/images/logo.png"
                   alt="MYN Logo"
                   width={64}
                   height={64}
                   className="w-full h-full object-cover"
+                  quality={60}
                 />
               </div>
               <h2 className="text-4xl font-bold text-white">MYN</h2>
