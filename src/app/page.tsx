@@ -438,25 +438,60 @@ export default function LandingPage() {
               <h4 className="text-3xl font-bold text-yellow-400">Información de Contacto</h4>
               <div className="space-y-8">
                 {[
-                  { icon: Phone, name: "Ignacio Sosa", contact: "011 3264-1442", color: "bg-green-600" },
-                  { icon: Phone, name: "Mario de la Cruz", contact: "011 7206-6971", color: "bg-blue-600" },
+                  {
+                    icon: Phone,
+                    name: "Ignacio Sosa",
+                    contact: "011 3264-1442",
+                    phone: "tel:+5401132641442",
+                    color: "bg-green-600",
+                  },
+                  {
+                    icon: Phone,
+                    name: "Mario de la Cruz",
+                    contact: "011 7206-6971",
+                    phone: "tel:+5401172066971",
+                    color: "bg-blue-600",
+                  },
                   {
                     icon: MapPin,
                     name: "Zona de Trabajo",
                     contact: "Buenos Aires y alrededores",
+                    phone: null,
                     color: "bg-purple-600",
                   },
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center space-x-6 p-6 bg-white/10 rounded-2xl">
-                    <div className={`${item.color} p-4 rounded-2xl`}>
-                      <item.icon className="h-8 w-8 text-white" />
+                ].map((item, index) =>
+                  item.phone ? (
+                    <a
+                      key={index}
+                      href={item.phone}
+                      className="flex items-center space-x-6 p-6 bg-white/10 rounded-2xl hover:bg-white/20 hover:scale-105 transition-all duration-300 cursor-pointer group"
+                    >
+                      <div
+                        className={`${item.color} p-4 rounded-2xl group-hover:scale-110 transition-transform duration-300`}
+                      >
+                        <item.icon className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-xl text-white group-hover:text-yellow-400 transition-colors duration-300">
+                          {item.name}
+                        </p>
+                        <p className="text-gray-300 text-lg group-hover:text-yellow-200 transition-colors duration-300">
+                          {item.contact}
+                        </p>
+                      </div>
+                    </a>
+                  ) : (
+                    <div key={index} className="flex items-center space-x-6 p-6 bg-white/10 rounded-2xl">
+                      <div className={`${item.color} p-4 rounded-2xl`}>
+                        <item.icon className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-xl text-white">{item.name}</p>
+                        <p className="text-gray-300 text-lg">{item.contact}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-bold text-xl text-white">{item.name}</p>
-                      <p className="text-gray-300 text-lg">{item.contact}</p>
-                    </div>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </div>
 
@@ -494,8 +529,12 @@ export default function LandingPage() {
             </div>
             <p className="text-gray-400 text-lg mb-6">Construcción y Renovación Profesional</p>
             <div className="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-12 text-lg">
-              <span>Ignacio Sosa: 011 3264-1442</span>
-              <span>Mario de la Cruz: 011 7206-6971</span>
+              <a href="tel:+5401132641442" className="hover:text-yellow-400 transition-colors duration-200">
+                Ignacio Sosa: 011 3264-1442
+              </a>
+              <a href="tel:+5401172066971" className="hover:text-yellow-400 transition-colors duration-200">
+                Mario de la Cruz: 011 7206-6971
+              </a>
             </div>
           </div>
           <div className="pt-8 border-t border-slate-800 text-center text-gray-400">
