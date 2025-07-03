@@ -538,7 +538,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="pt-8 border-t border-slate-800 text-center text-gray-400">
-            <p>© 2024 MYN. Todos los derechos reservados.</p>
+            <p>© 2024 MYN. Derechos reservados.</p>
           </div>
         </div>
       </footer>
